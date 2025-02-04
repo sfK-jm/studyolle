@@ -10,6 +10,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 class AccountControllerTest {
@@ -23,6 +25,7 @@ class AccountControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/sign-up"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("account/sign-up"));
+                .andExpect(MockMvcResultMatchers.view().name("account/sign-up"))
+                .andExpect(model().attributeExists("signUpForm"));
     }
 }
