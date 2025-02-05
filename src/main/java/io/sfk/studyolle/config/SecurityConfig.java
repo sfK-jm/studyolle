@@ -22,7 +22,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/login", "/sign-up", "/check-email", "/check-email-token",
                                 "/email-login", "/check-email-login", "/login-link").permitAll()
                         .requestMatchers(HttpMethod.GET, "/profile/*").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/sign-up").permitAll()
+                        .requestMatchers("/sign-up").permitAll()
                         .requestMatchers(PathRequest.toH2Console()).permitAll()
                         .anyRequest().authenticated())
                 .csrf(csrf -> csrf.ignoringRequestMatchers(PathRequest.toH2Console()))
