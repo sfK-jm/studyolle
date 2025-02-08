@@ -1,6 +1,6 @@
 package io.sfk.studyolle.account;
 
-import org.junit.jupiter.api.Assertions;
+import io.sfk.studyolle.domain.Account;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -45,10 +46,15 @@ class AccountControllerTest {
     @Test
     @DisplayName("회원 가입 처리 - 입력값 오류")
     void signUpSubmitWithWrongInput() throws Exception {
+
+        String nickname = "user";
+        String email = "a";
+        String password = "123";
+
         mockMvc.perform(MockMvcRequestBuilders.post("/sign-up")
-                        .param("nickname", "user")
-                        .param("email", "a")
-                        .param("password", "11")
+                        .param("nickname", nickname)
+                        .param("email", email)
+                        .param("password", password)
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("account/sign-up"));
@@ -57,15 +63,25 @@ class AccountControllerTest {
     @Test
     @DisplayName("회원 가입 처리 - 입력값 정상")
     void signUpSubmit_with_correct_input() throws Exception {
+
+        String nickname = "user";
+        String email = "a@gmail.com";
+        String password = "12345678";
+
         mockMvc.perform(MockMvcRequestBuilders.post("/sign-up")
-                        .param("nickname", "user")
-                        .param("email", "a@gmail.com")
-                        .param("password", "11111111")
+                        .param("nickname", nickname)
+                        .param("email", email)
+                        .param("password", password)
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/"));
 
-        Assertions.assertTrue(accountRepository.existsByEmail("a@gmail.com"));
+        assertTrue(accountRepository.existsByEmail(email));
+        assertTrue(accountRepository.existsByNickname(nickname));
+
+        Account account = accountRepository.findByEmail(email);
+        assertNotNull(account);
+        assertNotEquals(password, account.getPassword());
         then(javaMailSender).should().send(any(SimpleMailMessage.class));
     }
 }
