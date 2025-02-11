@@ -1,6 +1,8 @@
 package io.sfk.studyolle.account;
 
 import io.sfk.studyolle.domain.Account;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -32,17 +34,21 @@ public class AccountController {
 
     @PostMapping("/sign-up")
     public String signUpSubmit(@Valid SignUpForm signUpForm,
-                               BindingResult bindingResult) {
+                               BindingResult bindingResult,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
         if (bindingResult.hasErrors()) {
             return "account/sign-up";
         }
 
-        accountService.processNewAccount(signUpForm);
+        Account account = accountService.processNewAccount(signUpForm);
+        accountService.login(account, request, response);
         return "redirect:/";
     }
 
     @GetMapping("/check-email-token")
-    public String checkEmailToken(String token, String email, Model model) {
+    public String checkEmailToken(String token, String email, Model model,
+                                  HttpServletRequest request, HttpServletResponse response) {
         Account account = accountRepository.findByEmail(email);
         String view = "account/checked-email";
         if (account == null) {
@@ -50,12 +56,13 @@ public class AccountController {
             return view;
         }
 
-        if (!account.getEmailCheckToken().equals(token)) {
+        if (!account.isValidToken(token)) {
             model.addAttribute("error", "wrong.token");
             return view;
         }
 
         account.completeSignUp();
+        accountService.login(account, request, response);
         model.addAttribute("numberOfUser", accountRepository.count());
         model.addAttribute("nickname", account.getNickname());
         return view;
