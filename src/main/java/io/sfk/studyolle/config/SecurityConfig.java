@@ -35,7 +35,7 @@ public class SecurityConfig {
                         .loginPage("/login").permitAll())
                 .logout(logoutConfigurer -> logoutConfigurer
                         .logoutSuccessUrl("/"))
-                .csrf(csrf -> csrf.ignoringRequestMatchers(PathRequest.toH2Console()))
+//                .csrf(csrf -> csrf.ignoringRequestMatchers(PathRequest.toH2Console()))
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
         ;
 
