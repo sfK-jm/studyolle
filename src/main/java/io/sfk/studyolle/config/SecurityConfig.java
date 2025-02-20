@@ -1,7 +1,6 @@
 package io.sfk.studyolle.config;
 
 import io.sfk.studyolle.account.AccountService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,19 +12,12 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
-import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 
-import javax.sql.DataSource;
-
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
-
-    private final DataSource dataSource;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, AccountService accountService) throws Exception {
@@ -33,7 +25,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/login", "/sign-up", "/check-email-token",
-                                "/email-login", "/check-email-login", "/login-link").permitAll()
+                                "/email-login", "/check-email-login", "/login-link", "/profile/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/profile/*").permitAll()
                         .requestMatchers("/sign-up").permitAll()
                         .requestMatchers(PathRequest.toH2Console()).permitAll()
