@@ -23,7 +23,7 @@ public class Account {
 
     private String nickname;
     private String password;
-    private Boolean emailVerified;
+    private boolean emailVerified;
     private String emailCheckToken;
     private LocalDateTime emailCheckTokenGeneratedAt;
     private LocalDateTime joinedAt;
