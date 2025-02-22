@@ -1,6 +1,7 @@
 package io.sfk.studyolle.account;
 
 import io.sfk.studyolle.domain.Account;
+import io.sfk.studyolle.settings.Profile;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -76,8 +77,8 @@ public class AccountService implements UserDetailsService {
         securityContextRepository.saveContext(context, request, response);
     }
 
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String emailOrNickname) throws UsernameNotFoundException {
         Account account = accountRepository.findByEmail(emailOrNickname);
         if (account == null) {
@@ -94,5 +95,14 @@ public class AccountService implements UserDetailsService {
     public void completeSignUp(Account account, HttpServletRequest request, HttpServletResponse response) {
         account.completeSignUp();
         login(account, request, response);
+    }
+
+    public void updateProfile(Account account, Profile profile) {
+        account.setUrl(profile.getUrl());
+        account.setOccupation(profile.getOccupation());
+        account.setLocation(profile.getLocation());
+        account.setBio(profile.getBio());
+        // TODO: 프로필 이미지
+        accountRepository.save(account);
     }
 }
