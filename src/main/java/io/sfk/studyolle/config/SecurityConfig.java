@@ -29,8 +29,7 @@ public class SecurityConfig {
                                 "/email-login", "/check-email-login", "/login-link", "/profile/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/profile/*").permitAll()
                         .requestMatchers("/sign-up").permitAll()
-                        .requestMatchers(PathRequest.toH2Console()).permitAll()
-                        .requestMatchers("/h2-console/**").permitAll()
+//                        .requestMatchers("/h2-console/**").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
                         .loginPage("/login").permitAll())
@@ -42,7 +41,7 @@ public class SecurityConfig {
                         .rememberMeParameter("remember-me")
                         .rememberMeCookieName("remember-me")
                 )
-                .csrf(csrf -> csrf.ignoringRequestMatchers(PathRequest.toH2Console()))
+//                .csrf(csrf -> csrf.ignoringRequestMatchers(PathRequest.toH2Console()))
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
         ;
 
