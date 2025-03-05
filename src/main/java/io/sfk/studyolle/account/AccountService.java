@@ -40,25 +40,17 @@ public class AccountService implements UserDetailsService {
 
     private final SecurityContextHolderStrategy securityContextHolderStrategy;
     private final SecurityContextRepository securityContextRepository;
-    private final TagRepository tagRepository;
 
     public Account processNewAccount(SignUpForm signUpForm) {
         Account newAccount = saveNewAccount(signUpForm);
-        newAccount.generateEmailCheckToken();
         sendSignUpConfirmEmail(newAccount);
         return newAccount;
     }
 
     private Account saveNewAccount(@Valid SignUpForm signUpForm) {
-        Account account = Account.builder()
-                .email(signUpForm.getEmail())
-                .nickname(signUpForm.getNickname())
-                .password(passwordEncoder.encode(signUpForm.getPassword()))
-                .studyEnrollmentResultByWeb(true)
-                .studyCreatedByWeb(true)
-                .studyUpdatedByEmail(true)
-                .build();
-
+        signUpForm.setPassword(passwordEncoder.encode(signUpForm.getPassword()));
+        Account account = modelMapper.map(signUpForm, Account.class);
+        account.generateEmailCheckToken();
         return accountRepository.save(account);
     }
 

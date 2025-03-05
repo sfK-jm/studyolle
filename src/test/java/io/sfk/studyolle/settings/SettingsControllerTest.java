@@ -1,16 +1,23 @@
 package io.sfk.studyolle.settings;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.sfk.studyolle.WithAccount;
 import io.sfk.studyolle.account.AccountRepository;
+import io.sfk.studyolle.account.AccountService;
 import io.sfk.studyolle.domain.Account;
+import io.sfk.studyolle.domain.Tag;
+import io.sfk.studyolle.settings.form.TagForm;
+import io.sfk.studyolle.tag.TagRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -18,16 +25,17 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 class SettingsControllerTest {
 
-    @Autowired
-    MockMvc mockMvc;
-    @Autowired
-    AccountRepository accountRepository;
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    @Autowired MockMvc mockMvc;
+    @Autowired AccountRepository accountRepository;
+    @Autowired PasswordEncoder passwordEncoder;
+    @Autowired ObjectMapper objectMapper;
+    @Autowired TagRepository tagRepository;
+    @Autowired AccountService accountService;
 
     @AfterEach
     void afterEach() {
@@ -167,4 +175,54 @@ class SettingsControllerTest {
                 .andExpect(model().attributeExists("nicknameForm"));
     }
 
+    @Test
+    @WithAccount("test_user")
+    @DisplayName("계정의 태그 수정 폼")
+    void updateTagsForm() throws Exception {
+        mockMvc.perform(get(SettingsController.SETTINGS_TAGS_URL))
+                .andExpect(view().name(SettingsController.SETTINGS_TAGS_VIEW_NAME))
+                .andExpect(model().attributeExists("account"))
+                .andExpect(model().attributeExists("whitelist"));
+    }
+
+    @Test
+    @WithAccount("test_user")
+    @DisplayName("계정에 태그 추가")
+    void addTag() throws Exception {
+        TagForm tagForm = new TagForm();
+        tagForm.setTagTitle("newTag");
+
+        mockMvc.perform(post(SettingsController.SETTINGS_TAGS_URL + "/add")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(tagForm))
+                        .with(csrf()))
+                .andExpect(status().isOk());
+
+        Tag newTag = tagRepository.findByTitle("newTag");
+        assertNotNull(newTag);
+        Account testUser = accountRepository.findByNickname("test_user");
+        assertTrue(testUser.getTags().contains(newTag));
+    }
+
+    @Test
+    @WithAccount("test_user")
+    @DisplayName("계정에 태그 삭제")
+    void removeTag() throws Exception {
+        Account testUser = accountRepository.findByNickname("test_user");
+        Tag newTag = tagRepository.save(Tag.builder().title("newTag").build());
+        accountService.addTag(testUser, newTag);
+
+        assertTrue(testUser.getTags().contains(newTag));
+
+        TagForm tagForm = new TagForm();
+        tagForm.setTagTitle("newTag");
+
+        mockMvc.perform(post(SettingsController.SETTINGS_TAGS_URL + "/remove")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(tagForm))
+                        .with(csrf()))
+                .andExpect(status().isOk());
+
+        assertFalse(testUser.getTags().contains(newTag));
+    }
 }
