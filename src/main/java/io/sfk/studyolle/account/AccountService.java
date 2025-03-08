@@ -2,6 +2,7 @@ package io.sfk.studyolle.account;
 
 import io.sfk.studyolle.domain.Account;
 import io.sfk.studyolle.domain.Tag;
+import io.sfk.studyolle.domain.Zone;
 import io.sfk.studyolle.settings.Notifications;
 import io.sfk.studyolle.settings.Profile;
 import io.sfk.studyolle.tag.TagRepository;
@@ -143,5 +144,20 @@ public class AccountService implements UserDetailsService {
     public void removeTag(Account account, Tag tag) {
         Optional<Account> byId = accountRepository.findById(account.getId());
         byId.ifPresent(a -> a.getTags().remove(tag));
+    }
+
+    public Set<Zone> getZones(Account account) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        return byId.orElseThrow().getZones();
+    }
+
+    public void addZone(Account account, Zone zone) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        byId.ifPresent(a -> a.getZones().add(zone));
+    }
+
+    public void removeZone(Account account, Zone zone) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        byId.ifPresent(a -> a.getZones().remove(zone));
     }
 }
