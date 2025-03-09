@@ -38,3 +38,6 @@ out/
 
 # npm
 src/main/resources/static/node_modules
+
+# 중요 데이터(ex: smtp)
+src/main/resources/application-dev.yml
