@@ -25,9 +25,9 @@ public class HtmlEmailService implements EmailService{
                     mimeMessage, false, "UTF-8");
             mimeMessageHelper.setTo(emailMessage.getTo());
             mimeMessageHelper.setSubject(emailMessage.getSubject());
-            mimeMessageHelper.setText(emailMessage.getMessage(), false);
+            mimeMessageHelper.setText(emailMessage.getMessage(), true);
             javaMailSender.send(mimeMessage);
-            log.info("sent email: {}", emailMessage.getMessage());
+            // log.info("sent email: {}", emailMessage.getMessage());
         } catch (MessagingException e) {
             log.error("failed to send email", e);
         }
