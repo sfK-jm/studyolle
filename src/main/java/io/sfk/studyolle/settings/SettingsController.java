@@ -8,8 +8,9 @@ import io.sfk.studyolle.domain.Account;
 import io.sfk.studyolle.domain.Tag;
 import io.sfk.studyolle.domain.Zone;
 import io.sfk.studyolle.settings.form.NicknameForm;
-import io.sfk.studyolle.settings.form.TagForm;
-import io.sfk.studyolle.settings.form.ZoneForm;
+import io.sfk.studyolle.tag.TagForm;
+import io.sfk.studyolle.tag.TagService;
+import io.sfk.studyolle.zone.ZoneForm;
 import io.sfk.studyolle.settings.validator.NicknameValidator;
 import io.sfk.studyolle.tag.TagRepository;
 import io.sfk.studyolle.zone.ZoneRepository;
@@ -49,6 +50,7 @@ public class SettingsController {
     private final AccountService accountService;
     private final ModelMapper modelMapper;
     private final NicknameValidator nicknameValidator;
+    private final TagService tagService;
     private final TagRepository tagRepository;
     private final ObjectMapper objectMapper;
     private final ZoneRepository zoneRepository;
@@ -161,14 +163,7 @@ public class SettingsController {
     @PostMapping(TAGS + "/add")
     @ResponseBody
     public ResponseEntity addTag(@CurrentAccount Account account, @RequestBody TagForm tagForm) {
-        String title = tagForm.getTagTitle();
-
-        Tag tag = tagRepository.findByTitle(title);
-        if (tag == null) {
-            tag = tagRepository.save(Tag.builder()
-                    .title(title)
-                    .build());
-        }
+        Tag tag = tagService.findOrCreatedNew(tagForm.getTagTitle());
         accountService.addTag(account, tag);
         return ResponseEntity.ok().build();
     }

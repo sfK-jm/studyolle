@@ -1,4 +1,4 @@
-package io.sfk.studyolle.settings.form;
+package io.sfk.studyolle.zone;
 
 import io.sfk.studyolle.domain.Zone;
 import lombok.Data;

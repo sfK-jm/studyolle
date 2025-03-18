@@ -1,4 +1,4 @@
-package io.sfk.studyolle.settings.form;
+package io.sfk.studyolle.tag;
 
 import lombok.Data;
 
