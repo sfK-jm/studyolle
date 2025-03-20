@@ -144,4 +144,9 @@ public class Study {
         return this.published && this.recruitingUpdatedDateTime == null ||
                 this.recruitingUpdatedDateTime.isBefore(LocalDateTime.now().minusHours(1));
     }
+
+    public boolean isRemoveAble() {
+        return !this.published;
+        // todo 모입을 햇던 스터디는 삭제할 수 없다.
+    }
 }
