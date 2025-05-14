@@ -14,9 +14,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class EventControllerTest extends StudyControllerTest {
 
@@ -36,11 +38,106 @@ public class EventControllerTest extends StudyControllerTest {
 
         mockMvc.perform(post("/study/" + study.getPath() + "/events/" + event.getId() + "/enroll")
                         .with(csrf()))
-                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/study/" + study.getPath() + "/events/" + event.getId()));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/study/" + study.getPath() + "/events/" + event.getId()));
 
         Account user = accountRepository.findByNickname("user");
         isAccepted(user, event);
+    }
+
+    @Test
+    @DisplayName("선착순 모임에 참가 신청 - 대기중(이미 인원이 꽉차서)")
+    @WithAccount("user")
+    void newEnrollment_to_FCFS_event_not_accepted() throws Exception {
+        Account testAccount = createAccount("test");
+        Study study = createStudy("test-study", testAccount);
+        Event event = createEvent("test-event", EventType.FCFS, 2, study, testAccount);
+
+        Account test1 = createAccount("test1");
+        Account test2 = createAccount("test2");
+        eventService.newEnrollment(event, test1);
+        eventService.newEnrollment(event, test2);
+
+        mockMvc.perform(post("/study/" + study.getPath() + "/events/" + event.getId() + "/enroll")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/study/" + study.getPath() + "/events/" + event.getId()));
+
+        Account user = accountRepository.findByNickname("user");
+        isNotAccepted(user, event);
+    }
+
+    @Test
+    @DisplayName("참가신청 확정자가 선착순 모임에 참가 신청을 취소하는 경우, 바로 다음 대기자를 자동으로 신청 확인한다.")
+    @WithAccount("user")
+    void accepted_Account_cancelEnrollment_to_FCFS_event_not_Accepted() throws Exception {
+        Account user = accountRepository.findByNickname("user");
+        Account test = createAccount("test");
+        Account test1 = createAccount("test1");
+        Study study = createStudy("test-study", test);
+        Event event = createEvent("test-event", EventType.FCFS, 2, study, test);
+
+        eventService.newEnrollment(event, test1);
+        eventService.newEnrollment(event, user);
+        eventService.newEnrollment(event, test);
+
+        isAccepted(test1, event);
+        isAccepted(user, event);
+        isNotAccepted(test, event);
+
+        mockMvc.perform(post("/study/" + study.getPath() + "/events/" + event.getId() + "/disenroll")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/study/" + study.getPath() + "/events/" + event.getId()));
+
+        isAccepted(test1, event);
+        isAccepted(test, event);
+        assertNull(enrollmentRepository.findByEventAndAccount(event, user));
+    }
+
+    @Test
+    @DisplayName("참가신청 비확정자가 선착순 모임에 참가 신청을 취소하는 경우, 기존 확정자를 그대로 유지하고 새로운 확정자는 없다.")
+    @WithAccount("user")
+    void not_accepted_account_cancelEnrollment_to_FCFS_event_not_accepted() throws Exception {
+        Account user = accountRepository.findByNickname("user");
+        Account test1 = createAccount("test1");
+        Account test2 = createAccount("test2");
+        Study study = createStudy("test-study", test1);
+        Event event = createEvent("test-event", EventType.FCFS, 2, study, test1);
+
+        eventService.newEnrollment(event, test2);
+        eventService.newEnrollment(event, test1);
+        eventService.newEnrollment(event, user);
+
+        isAccepted(test1, event);
+        isAccepted(test2, event);
+        isNotAccepted(user, event);
+
+        mockMvc.perform(post("/study/" + study.getPath() + "/events/" + event.getId() + "/disenroll")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/study/" + study.getPath() + "/events/" + event.getId()));
+
+        isAccepted(test1, event);
+        isAccepted(test2, event);
+        assertNull(enrollmentRepository.findByEventAndAccount(event, user));
+    }
+
+    @Test
+    @DisplayName("관리자 확인 모임에 참가 신청 - 대기중")
+    @WithAccount("user")
+    void newEnrollment_to_CONFIRMATIVE_event_not_accepted() throws Exception {
+        Account test = createAccount("test");
+        Study study = createStudy("test-study", test);
+        Event event = createEvent("test-event", EventType.CONFIRMATIVE, 2, study, test);
+
+        mockMvc.perform(post("/study/" + study.getPath() + "/events/" + event.getId() + "/enroll")
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/study/" + study.getPath() + "/events/" + event.getId()));
+
+        Account user = accountRepository.findByNickname("user");
+        isNotAccepted(user, event);
     }
 
     private Event createEvent(String eventTitle, EventType eventType, int limit, Study study, Account account) {
@@ -57,5 +154,9 @@ public class EventControllerTest extends StudyControllerTest {
 
     private void isAccepted(Account account, Event event) {
         assertTrue(enrollmentRepository.findByEventAndAccount(event, account).isAccepted());
+    }
+
+    private void isNotAccepted(Account account, Event event) {
+        assertFalse(enrollmentRepository.findByEventAndAccount(event, account).isAccepted());
     }
 }
