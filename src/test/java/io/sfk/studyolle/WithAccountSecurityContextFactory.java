@@ -1,7 +1,7 @@
 package io.sfk.studyolle;
 
-import io.sfk.studyolle.account.AccountService;
-import io.sfk.studyolle.account.SignUpForm;
+import io.sfk.studyolle.modules.account.AccountService;
+import io.sfk.studyolle.modules.account.form.SignUpForm;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

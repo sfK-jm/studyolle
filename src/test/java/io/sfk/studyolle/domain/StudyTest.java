@@ -1,6 +1,8 @@
 package io.sfk.studyolle.domain;
 
-import io.sfk.studyolle.account.UserAccount;
+import io.sfk.studyolle.modules.account.UserAccount;
+import io.sfk.studyolle.modules.account.Account;
+import io.sfk.studyolle.modules.study.Study;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

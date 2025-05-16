@@ -1,16 +1,16 @@
 package io.sfk.studyolle.event;
 
 import io.sfk.studyolle.WithAccount;
-import io.sfk.studyolle.domain.Account;
-import io.sfk.studyolle.domain.Event;
-import io.sfk.studyolle.domain.EventType;
-import io.sfk.studyolle.domain.Study;
+import io.sfk.studyolle.modules.account.Account;
+import io.sfk.studyolle.modules.event.Event;
+import io.sfk.studyolle.modules.event.EventType;
+import io.sfk.studyolle.modules.study.Study;
+import io.sfk.studyolle.modules.event.EnrollmentRepository;
+import io.sfk.studyolle.modules.event.EventService;
 import io.sfk.studyolle.study.StudyControllerTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDateTime;
 

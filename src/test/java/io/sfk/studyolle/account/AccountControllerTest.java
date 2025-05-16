@@ -1,19 +1,16 @@
 package io.sfk.studyolle.account;
 
-import io.sfk.studyolle.domain.Account;
-import io.sfk.studyolle.mail.EmailMessage;
-import io.sfk.studyolle.mail.EmailService;
+import io.sfk.studyolle.modules.account.Account;
+import io.sfk.studyolle.infra.mail.EmailMessage;
+import io.sfk.studyolle.infra.mail.EmailService;
+import io.sfk.studyolle.modules.account.AccountRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;

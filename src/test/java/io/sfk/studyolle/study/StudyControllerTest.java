@@ -1,9 +1,11 @@
 package io.sfk.studyolle.study;
 
 import io.sfk.studyolle.WithAccount;
-import io.sfk.studyolle.account.AccountRepository;
-import io.sfk.studyolle.domain.Account;
-import io.sfk.studyolle.domain.Study;
+import io.sfk.studyolle.modules.account.AccountRepository;
+import io.sfk.studyolle.modules.account.Account;
+import io.sfk.studyolle.modules.study.Study;
+import io.sfk.studyolle.modules.study.StudyRepository;
+import io.sfk.studyolle.modules.study.StudyService;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;

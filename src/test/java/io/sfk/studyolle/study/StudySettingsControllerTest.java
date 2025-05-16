@@ -1,8 +1,8 @@
 package io.sfk.studyolle.study;
 
 import io.sfk.studyolle.WithAccount;
-import io.sfk.studyolle.domain.Account;
-import io.sfk.studyolle.domain.Study;
+import io.sfk.studyolle.modules.account.Account;
+import io.sfk.studyolle.modules.study.Study;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
