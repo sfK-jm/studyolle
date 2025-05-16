@@ -1,10 +1,7 @@
-package io.sfk.studyolle.settings;
+package io.sfk.studyolle.modules.account;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.sfk.studyolle.WithAccount;
-import io.sfk.studyolle.modules.account.AccountRepository;
-import io.sfk.studyolle.modules.account.AccountService;
-import io.sfk.studyolle.modules.account.Account;
+import io.sfk.studyolle.infra.MockMvcTest;
 import io.sfk.studyolle.modules.tag.Tag;
 import io.sfk.studyolle.modules.zone.Zone;
 import io.sfk.studyolle.modules.tag.TagForm;
@@ -30,9 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Transactional
-@SpringBootTest
-@AutoConfigureMockMvc
+@MockMvcTest
 class SettingsControllerTest {
 
     @Autowired MockMvc mockMvc;

@@ -1,4 +1,4 @@
-package io.sfk.studyolle;
+package io.sfk.studyolle.modules.account;
 
 import org.springframework.security.test.context.support.WithSecurityContext;
 

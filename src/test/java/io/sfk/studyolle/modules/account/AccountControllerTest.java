@@ -1,5 +1,6 @@
-package io.sfk.studyolle.account;
+package io.sfk.studyolle.modules.account;
 
+import io.sfk.studyolle.infra.MockMvcTest;
 import io.sfk.studyolle.modules.account.Account;
 import io.sfk.studyolle.infra.mail.EmailMessage;
 import io.sfk.studyolle.infra.mail.EmailService;
@@ -23,9 +24,7 @@ import static org.springframework.security.test.web.servlet.response.SecurityMoc
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Transactional
-@SpringBootTest
-@AutoConfigureMockMvc
+@MockMvcTest
 class AccountControllerTest {
 
     @Autowired

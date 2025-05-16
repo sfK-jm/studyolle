@@ -1,11 +1,10 @@
-package io.sfk.studyolle.study;
+package io.sfk.studyolle.modules.study;
 
-import io.sfk.studyolle.WithAccount;
+import io.sfk.studyolle.infra.MockMvcTest;
+import io.sfk.studyolle.modules.account.AccountFactory;
+import io.sfk.studyolle.modules.account.WithAccount;
 import io.sfk.studyolle.modules.account.AccountRepository;
 import io.sfk.studyolle.modules.account.Account;
-import io.sfk.studyolle.modules.study.Study;
-import io.sfk.studyolle.modules.study.StudyRepository;
-import io.sfk.studyolle.modules.study.StudyService;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,16 +20,15 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Transactional
-@SpringBootTest
-@AutoConfigureMockMvc
-@RequiredArgsConstructor
+@MockMvcTest
 public class StudyControllerTest {
 
-    @Autowired protected MockMvc mockMvc;
-    @Autowired protected StudyService studyService;
-    @Autowired protected StudyRepository studyRepository;
-    @Autowired protected AccountRepository accountRepository;
+    @Autowired MockMvc mockMvc;
+    @Autowired StudyService studyService;
+    @Autowired StudyRepository studyRepository;
+    @Autowired AccountRepository accountRepository;
+    @Autowired AccountFactory accountFactory;
+    @Autowired StudyFactory studyFactory;
 
     @AfterEach
     void afterEach() {

@@ -1,6 +1,5 @@
-package io.sfk.studyolle;
+package io.sfk.studyolle.modules.account;
 
-import io.sfk.studyolle.modules.account.AccountService;
 import io.sfk.studyolle.modules.account.form.SignUpForm;
 
 import lombok.RequiredArgsConstructor;

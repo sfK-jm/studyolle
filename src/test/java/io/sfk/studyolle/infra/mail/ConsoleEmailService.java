@@ -1,4 +1,4 @@
-package io.sfk.studyolle.mail;
+package io.sfk.studyolle.infra.mail;
 
 import io.sfk.studyolle.infra.mail.EmailMessage;
 import io.sfk.studyolle.infra.mail.EmailService;
