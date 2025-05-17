@@ -1,5 +1,6 @@
 package io.sfk.studyolle.modules.main;
 
+import io.sfk.studyolle.infra.AbstractContainerBaseTest;
 import io.sfk.studyolle.infra.MockMvcTest;
 import io.sfk.studyolle.modules.account.AccountRepository;
 import io.sfk.studyolle.modules.account.AccountService;
@@ -21,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @MockMvcTest
-class MainControllerTest {
+class MainControllerTest extends AbstractContainerBaseTest {
 
     @Autowired
     MockMvc mockMvc;

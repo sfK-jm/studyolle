@@ -60,7 +60,6 @@ public class EventController {
             return "event/form";
         }
 
-
         Event event = eventService.createEvent(modelMapper.map(eventForm, Event.class), study, account);
         return "redirect:/study/" + study.getEncodedPath() + "/events/" + event.getId();
     }
