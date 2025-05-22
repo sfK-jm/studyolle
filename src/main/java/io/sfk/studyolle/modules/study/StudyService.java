@@ -2,6 +2,7 @@ package io.sfk.studyolle.modules.study;
 
 import io.sfk.studyolle.modules.account.Account;
 import io.sfk.studyolle.modules.study.event.StudyCreatedEvent;
+import io.sfk.studyolle.modules.study.event.StudyUpdateEvent;
 import io.sfk.studyolle.modules.tag.Tag;
 import io.sfk.studyolle.modules.zone.Zone;
 import io.sfk.studyolle.modules.study.form.StudyDescriptionForm;
@@ -43,6 +44,7 @@ public class StudyService {
 
     public void updateStudyDescription(Study study, StudyDescriptionForm studyDescriptionForm) {
         modelMapper.map(studyDescriptionForm, study);
+        eventPublisher.publishEvent(new StudyUpdateEvent(study, "스터디 소개를 수정했습니다."));
     }
 
     public void updateStudyImage(Study study, String image) {
@@ -113,15 +115,17 @@ public class StudyService {
 
     public void close(Study study) {
         study.close();
+        eventPublisher.publishEvent(new StudyUpdateEvent(study, "스터디를 종료했습니다."));
     }
 
     public void startRecruit(Study study) {
         study.startRecruit();
-
+        eventPublisher.publishEvent(new StudyUpdateEvent(study, "팀원 모집을 시작합니다."));
     }
 
     public void stopRecruit(Study study) {
         study.stopRecruit();
+        eventPublisher.publishEvent(new StudyUpdateEvent(study, "팀원 모집을 중단했습니다."));
     }
 
     public boolean isValidPath(String newPath) {
