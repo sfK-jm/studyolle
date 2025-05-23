@@ -65,7 +65,8 @@ public class EventController {
     }
 
     @GetMapping("/events/{id}")
-    public String getEvent(@CurrentAccount Account account, @PathVariable String path, @PathVariable("id") Event event, Model model) {
+    public String getEvent(@CurrentAccount Account account, @PathVariable String path,
+                           @PathVariable("id") Event event, Model model) {
         model.addAttribute(account);
         model.addAttribute(event);
         model.addAttribute(studyRepository.findStudyWithManagersByPath(path));

@@ -13,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@NamedEntityGraph(name = "Event.withEnrollments",
+@NamedEntityGraph(
+        name = "Event.withEnrollments",
         attributeNodes = @NamedAttributeNode("enrollments"))
 @Entity
 @Getter @Setter
@@ -49,7 +50,7 @@ public class Event {
 
     private Integer limitOfEnrollments;
 
-    @OneToMany(mappedBy = "event")
+    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
     @OrderBy("enrolledAt")
     private List<Enrollment> enrollments = new ArrayList<>();
 
