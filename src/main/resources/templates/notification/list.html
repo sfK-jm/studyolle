@@ -57,7 +57,7 @@
                 <div class="card-header">
                     주요 활동 지역에 관심있는 주제의 스터디가 생겼습니다.
                 </div>
-                <div th:replace="fragments.html :: notification-list (notifications=${newStudyNotifications})"></div>
+                <div th:replace="~{fragments.html :: notification-list (notifications=${newStudyNotifications})}"></div>
             </div>
 
             <div class="card mt-4" th:if="${eventEnrollmentNotifications.size() > 0}">
