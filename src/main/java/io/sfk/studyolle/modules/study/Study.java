@@ -6,6 +6,7 @@ import io.sfk.studyolle.modules.tag.Tag;
 import io.sfk.studyolle.modules.zone.Zone;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -66,6 +67,9 @@ public class Study {
     private boolean closed;
 
     private boolean useBanner;
+
+    @ColumnDefault(value = "0")
+    private Integer memberCount = 0;
 
     public void addManager(Account account) {
         this.managers.add(account);
@@ -137,10 +141,12 @@ public class Study {
 
     public void addMember(Account account) {
         this.getMembers().add(account);
+        this.memberCount++;
     }
 
     public void removeMember(Account account) {
         this.getMembers().remove(account);
+        this.memberCount--;
     }
 
     public String getEncodedPath() {
